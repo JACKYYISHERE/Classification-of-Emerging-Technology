@@ -1,6 +1,8 @@
 import openai
 import streamlit as st
 import pandas as pd
+import os
+
 
 # Set up OpenAI client
 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -57,11 +59,6 @@ full_tech_list = [
     {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
-# Display system prompt at the top
-with st.chat_message("system"):
-    if st.session_state.get("messages"):
-        st.markdown(st.session_state["messages"][0]["content"])
-
 # Chat input
 user_input = st.chat_input("Ask about a technology or describe its attributes...")
 if user_input:
@@ -82,7 +79,14 @@ if user_input:
             response = client.chat.completions.create(
                 model="gpt-4o",
                 messages=st.session_state.messages + [
-                    {"role": "system", "content": "If the user asks about a tech not in the database, infer classification as 'Bleeding Edge', 'Leading Edge', or 'Commodity (Trailing Edge)' based on their description."},
+                    {"role": "system", "content": (
+                        "If the user asks about a technology not in the database, respond with the most likely classification as one of the following:\n"
+                        "- Bleeding Edge\n"
+                        "- Leading Edge\n"
+                        "- Commodity (Trailing Edge)\n\n"
+                        "Please respond with the following format:\n"
+                        "✅ **[Technology Name]** is classified as: **[Classification]**\n\n📌 Application: _[If known or inferred, else N/A]_"
+                    )},
                 ]
             )
             reply = response.choices[0].message.content
