@@ -119,11 +119,10 @@ if user_input:
             )
             reply = response.choices[0].message.content
 
-      st.session_state["messages"] += [
+    st.session_state["messages"] += [
         {"role": "user", "content": user_input},
         {"role": "assistant", "content": reply}
     ]
-
 
     with st.chat_message("assistant"):
         st.markdown(reply)
