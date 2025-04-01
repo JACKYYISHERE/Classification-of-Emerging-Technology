@@ -105,7 +105,7 @@ if user_input:
     matched = None
     lowered_input = user_input.lower()
     for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if tech_key in lowered_input:
+        if tech_key in lowered_input or lowered_input in tech_key:
             matched = tech_lookup[tech_key]
             break
 
