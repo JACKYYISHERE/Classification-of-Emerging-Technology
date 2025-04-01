@@ -70,24 +70,6 @@ for tech in full_tech_list:
     tech_lookup[name_key] = tech
     tech_lookup[combined_key] = tech
 
-    if " in " in name_key:
-        short_base = name_key.split(" in ")[0].strip()
-        if short_base not in tech_lookup:
-            tech_lookup[short_base] = tech
-
-    if app_key:
-        tech_lookup[app_key] = tech
-        for word in app_key.split(","):
-            subkey = word.strip()
-            tech_lookup[subkey] = tech
-            tech_lookup[f"{name_key} in {subkey}"] = tech
-            tech_lookup[f"{subkey} in {name_key}"] = tech
-            tech_lookup[f"{subkey} in {subkey}"] = tech
-            tech_lookup[f"{subkey} in {app_key}"] = tech
-            tech_lookup[f"{app_key} in {subkey}"] = tech
-            tech_lookup[f"{subkey} use case"] = tech
-            tech_lookup[f"{subkey} application"] = tech
-
 st.set_page_config(page_title="Tech Classifier", page_icon="💬")
 st.title("🤖 Emerging Technology Classifier")
 
@@ -109,7 +91,7 @@ if user_input:
     matched = None
     lowered_input = user_input.lower()
     for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if tech_key in lowered_input or lowered_input in tech_key:
+        if lowered_input == tech_key:
             matched = tech_lookup[tech_key]
             break
 
