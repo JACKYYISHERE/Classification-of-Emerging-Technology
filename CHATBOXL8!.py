@@ -100,6 +100,13 @@ if user_input:
         name_display = matched.get("name", "This technology")
         application = matched.get("application", "N/A")
         reply = f"✅ **{name_display}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
+
+        # 只渲染，不追加到 message（防止重复）
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        with st.chat_message("assistant"):
+            st.markdown(reply)
+
     else:
         gpt_prompt = [
             {"role": "system", "content": (
@@ -119,16 +126,10 @@ if user_input:
             )
             reply = response.choices[0].message.content
 
-    st.session_state["messages"] += [
-        {"role": "user", "content": user_input},
-        {"role": "assistant", "content": reply}
-    ]
+        st.session_state["messages"] += [
+            {"role": "user", "content": user_input},
+            {"role": "assistant", "content": reply}
+        ]
 
-    with st.chat_message("assistant"):
-        st.markdown(reply)
-
-# Display chat history
-for msg in st.session_state["messages"]:
-    if msg["role"] not in ["system"]:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+        with st.chat_message("assistant"):
+            st.markdown(reply)
