@@ -57,8 +57,26 @@ full_tech_list = [
     {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
-# Build tech name lookup
-tech_lookup = {tech["name"].lower(): tech for tech in full_tech_list}
+# Enhanced tech name and application keyword matching
+tech_lookup = {}
+for tech in full_tech_list:
+    name_key = tech["name"].lower()
+    app_key = tech.get("application", "").lower()
+    combined_key = f"{name_key} in {app_key}" if app_key else name_key
+
+    tech_lookup[name_key] = tech
+    tech_lookup[combined_key] = tech
+
+    # Add shortened and variant application matching keywords
+    if " in " in name_key:
+        short_base = name_key.split(" in ")[0].strip()
+        if short_base not in tech_lookup:
+            tech_lookup[short_base] = tech
+
+    if app_key:
+        for word in app_key.split(","):
+            subkey = f"{name_key} in {word.strip()}"
+            tech_lookup[subkey] = tech
 
 st.set_page_config(page_title="Tech Classifier", page_icon="💬")
 st.title("🤖 Emerging Technology Classifier")
@@ -79,9 +97,10 @@ with st.chat_message("system"):
 user_input = st.chat_input("Ask about a technology or describe its attributes...")
 if user_input:
     matched = None
-    for tech_name in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if tech_name in user_input.lower():
-            matched = tech_lookup[tech_name]
+    lowered_input = user_input.lower()
+    for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
+        if tech_key in lowered_input:
+            matched = tech_lookup[tech_key]
             break
 
     if matched:
@@ -103,7 +122,6 @@ if user_input:
 
 # Display chat history
 for msg in st.session_state.messages:
-    if msg["role"] != "assistant" and msg["role"] != "system":
+    if msg["role"] not in ["assistant", "system"]:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-
