@@ -81,6 +81,8 @@ for tech in full_tech_list:
             subkey = word.strip()
             tech_lookup[subkey] = tech
             tech_lookup[f"{name_key} in {subkey}"] = tech
+            tech_lookup[f"{subkey} in {name_key}"] = tech
+            tech_lookup[f"{subkey} in {subkey}"] = tech
 
 st.set_page_config(page_title="Tech Classifier", page_icon="💬")
 st.title("🤖 Emerging Technology Classifier")
