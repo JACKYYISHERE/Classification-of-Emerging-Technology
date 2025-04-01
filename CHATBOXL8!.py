@@ -5,9 +5,6 @@ import pandas as pd
 # Set up OpenAI client
 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-
-
-
 # Classification function
 def classify_tech(tech):
     avg_score = sum([
@@ -25,59 +22,39 @@ def classify_tech(tech):
     else:
         return "Unclear"
 
-# Full tech list with known attributes
+# Updated list of emerging technologies and applications
 full_tech_list = [
-    {"name": "Blockchain", "age": 3, "risk": 5, "stability": 2, "market_adoption": 1,
+    {"name": "Blockchain", "application": "Private Equity", "age": 3, "risk": 5, "stability": 2, "market_adoption": 1,
      "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2,
      "public_acceptance": 1, "technical_scalability": 1, "commercial_adoption": 1},
 
-    {"name": "Blockchain in Private Equity", "age": 4, "risk": 3, "stability": 3, "market_adoption": 4,
+    {"name": "Blockchain in Private Equity", "application": "Secure recordkeeping and asset tracking in private equity", "age": 4, "risk": 3, "stability": 3, "market_adoption": 4,
      "regulatory_maturity": 3, "infrastructure_readiness": 4, "commercial_viability": 4,
      "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "LLM Deployment", "age": 2, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3,
-     "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "Drone Adoption", "age": 3, "risk": 4, "stability": 2, "market_adoption": 3, "regulatory_maturity": 2,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "AI Agents", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2,
-     "infrastructure_readiness": 2, "commercial_viability": 3, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 2},
-    {"name": "AI-Enhanced Robotics", "age": 2, "risk": 4, "stability": 2, "market_adoption": 3, "regulatory_maturity": 2,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "Wearables in Medicine", "age": 3, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "IT/Energy Convergence", "age": 4, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 3},
-    {"name": "Augmented AI", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "Synthetic Biology", "age": 2, "risk": 5, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2,
-     "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
-    {"name": "Metaverse Platforms", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2,
-     "infrastructure_readiness": 3, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 2},
-    {"name": "Digital Twins", "age": 4, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "Web3 for Identity", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2,
-     "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
-    {"name": "5G/6G Infrastructure", "age": 5, "risk": 3, "stability": 4, "market_adoption": 4, "regulatory_maturity": 4,
-     "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "Brain-Computer Interfaces", "age": 1, "risk": 5, "stability": 1, "market_adoption": 1, "regulatory_maturity": 1,
-     "infrastructure_readiness": 1, "commercial_viability": 1, "public_acceptance": 1, "technical_scalability": 1, "commercial_adoption": 1},
-    {"name": "Quantum Networking", "age": 2, "risk": 5, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2,
-     "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
-    {"name": "AI for Drug Discovery", "age": 3, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "Green Hydrogen", "age": 3, "risk": 4, "stability": 2, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "Edge AI", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "AI Code Assistants", "age": 2, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3,
-     "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "Autonomous Vehicles", "age": 4, "risk": 4, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 3},
-    {"name": "Decentralized Energy Systems", "age": 3, "risk": 4, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
-    {"name": "GenAI Content Creation", "age": 2, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3,
-     "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
-    {"name": "Digital Trust Infrastructure", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3,
-     "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3}
+
+    {"name": "AI Agents", "application": "Autonomous support agents, AI workflow assistants", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 3, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 2},
+    {"name": "AI Agents in Auto-Driving", "application": "AI-driven decision systems in self-driving vehicles", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 3},
+    {"name": "LLM Deployment", "application": "Domain-specific large and small language models", "age": 2, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3, "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 4},
+    {"name": "Drone Adoption", "application": "Drones in logistics, agriculture, disaster response", "age": 3, "risk": 4, "stability": 2, "market_adoption": 3, "regulatory_maturity": 2, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "AI-Enhanced Robotics", "application": "Robots with embodied intelligence and adaptability", "age": 2, "risk": 4, "stability": 2, "market_adoption": 3, "regulatory_maturity": 2, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Wearables/Biomarkers in Medicine/Wellness", "application": "Medical-grade health monitoring", "age": 3, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
+    {"name": "IT/Energy Convergence", "application": "Digital transformation of energy sector", "age": 4, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 4, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 3},
+    {"name": "Augmented Artificial Intelligence (A2I)", "application": "Human-AI collaborative systems", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Autonomous Driving", "application": "Self-driving vehicles across use cases", "age": 4, "risk": 4, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 3},
+    {"name": "SmartAg", "application": "AI-driven agriculture for yield and sustainability", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Functional Safety for Autonomous Vehicles", "application": "Reliable and safe autonomous systems", "age": 3, "risk": 4, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "AI-Assisted Drug Discovery", "application": "AI-accelerated pharmaceutical R&D", "age": 3, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 4, "commercial_adoption": 4},
+    {"name": "Sustainable Computing", "application": "Green IT and carbon-efficient computing", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Misinformation/Disinformation Detection", "application": "AI filters for content credibility", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "AI-Based Medical Diagnosis", "application": "Enhanced diagnostics using AI", "age": 3, "risk": 3, "stability": 3, "market_adoption": 4, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 4, "technical_scalability": 4, "commercial_adoption": 4},
+    {"name": "AI-Optimized Green HPC", "application": "High-performance computing with lower carbon", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Next-Gen Cyberwarfare", "application": "AI-powered cyber defense and offense", "age": 2, "risk": 4, "stability": 3, "market_adoption": 3, "regulatory_maturity": 2, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 2, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "New Battery Chemistries", "application": "Solid-state and sodium-ion batteries", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 3, "infrastructure_readiness": 3, "commercial_viability": 4, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Data Feudalism", "application": "User-owned and monetized data ecosystems", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
+    {"name": "Nuclear-Powered Data Centers", "application": "Small modular reactors for green computing", "age": 2, "risk": 5, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
+    {"name": "Tools and Policies for AI Regulation", "application": "Ethical and policy frameworks for AI", "age": 3, "risk": 3, "stability": 3, "market_adoption": 3, "regulatory_maturity": 4, "infrastructure_readiness": 3, "commercial_viability": 3, "public_acceptance": 3, "technical_scalability": 3, "commercial_adoption": 3},
+    {"name": "Brain-Computer Interfaces (BCIs)", "application": "Neural input/output interfaces", "age": 1, "risk": 5, "stability": 1, "market_adoption": 1, "regulatory_maturity": 1, "infrastructure_readiness": 1, "commercial_viability": 1, "public_acceptance": 1, "technical_scalability": 1, "commercial_adoption": 1},
+    {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
 # Build tech name lookup
@@ -89,17 +66,18 @@ st.title("🤖 Emerging Technology Classifier")
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": (
-            "Hi, I'm a helpful assistant that classifies emerging technologies based on YOUR FANTASTIC questions.     PLZ TRY OUT THE EXAMPLE PROMPT: How would you classify Blockchain? 😊"
+            "Hi, I'm a helpful assistant that classifies emerging technologies based on YOUR FANTASTIC questions.\n\nPLZ TRY OUT THE EXAMPLE PROMPT: How would you classify Blockchain? 😊"
         )}
     ]
+
 # Display system prompt at the top
 with st.chat_message("system"):
     if st.session_state.get("messages"):
         st.markdown(st.session_state["messages"][0]["content"])
+
 # Chat input
 user_input = st.chat_input("Ask about a technology or describe its attributes...")
 if user_input:
-    # Check if input mentions a known tech name
     matched = None
     for tech_name in sorted(tech_lookup.keys(), key=len, reverse=True):
         if tech_name in user_input.lower():
@@ -108,9 +86,9 @@ if user_input:
 
     if matched:
         classification = classify_tech(matched)
-        reply = f"✅ **{matched['name']}** is classified as: **{classification}**"
+        application = matched.get("application", "N/A")
+        reply = f"✅ **{matched['name']}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
     else:
-        # Fallback to GPT
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.spinner("Analyzing..."):
             response = client.chat.completions.create(
@@ -128,3 +106,4 @@ for msg in st.session_state.messages:
     if msg["role"] != "assistant" and msg["role"] != "system":
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
+
