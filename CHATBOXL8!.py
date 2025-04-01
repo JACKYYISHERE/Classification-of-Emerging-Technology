@@ -57,37 +57,6 @@ full_tech_list = [
     {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
-# Enhanced tech name and application keyword matching
-tech_lookup = {}
-for tech in full_tech_list:
-    name_key = tech["name"].lower()
-    app_key = tech.get("application", "").lower()
-    combined_key = f"{name_key} in {app_key}" if app_key else name_key
-
-    tech_lookup[name_key] = tech
-    tech_lookup[combined_key] = tech
-
-    # Add shortened and variant application matching keywords
-    if " in " in name_key:
-        short_base = name_key.split(" in ")[0].strip()
-        if short_base not in tech_lookup:
-            tech_lookup[short_base] = tech
-
-    if app_key:
-        for word in app_key.split(","):
-            subkey = f"{name_key} in {word.strip()}"
-            tech_lookup[subkey] = tech
-
-st.set_page_config(page_title="Tech Classifier", page_icon="💬")
-st.title("🤖 Emerging Technology Classifier")
-
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "system", "content": (
-            "Hi, I'm a helpful assistant that classifies emerging technologies based on YOUR FANTASTIC questions.\n\nPLZ TRY OUT THE EXAMPLE PROMPT: How would you classify Blockchain? 😊"
-        )}
-    ]
-
 # Display system prompt at the top
 with st.chat_message("system"):
     if st.session_state.get("messages"):
@@ -109,13 +78,18 @@ if user_input:
         reply = f"✅ **{matched['name']}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
     else:
         st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analyzing with GPT..."):
             response = client.chat.completions.create(
                 model="gpt-4o",
-                messages=st.session_state.messages
+                messages=st.session_state.messages + [
+                    {"role": "system", "content": "If the user asks about a tech not in the database, infer classification as 'Bleeding Edge', 'Leading Edge', or 'Commodity (Trailing Edge)' based on their description."},
+                ]
             )
             reply = response.choices[0].message.content
         st.session_state.messages.append({"role": "assistant", "content": reply})
+
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    st.session_state.messages.append({"role": "assistant", "content": reply})
 
     with st.chat_message("assistant"):
         st.markdown(reply)
