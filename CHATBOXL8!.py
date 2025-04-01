@@ -83,6 +83,10 @@ for tech in full_tech_list:
             tech_lookup[f"{name_key} in {subkey}"] = tech
             tech_lookup[f"{subkey} in {name_key}"] = tech
             tech_lookup[f"{subkey} in {subkey}"] = tech
+            tech_lookup[f"{subkey} in {app_key}"] = tech
+            tech_lookup[f"{app_key} in {subkey}"] = tech
+            tech_lookup[f"{subkey} use case"] = tech
+            tech_lookup[f"{subkey} application"] = tech
 
 st.set_page_config(page_title="Tech Classifier", page_icon="💬")
 st.title("🤖 Emerging Technology Classifier")
@@ -111,8 +115,9 @@ if user_input:
 
     if matched:
         classification = classify_tech(matched)
+        name_display = matched.get("name", "This technology")
         application = matched.get("application", "N/A")
-        reply = f"✅ **{matched['name']}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
+        reply = f"✅ **{name_display}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
     else:
         gpt_prompt = [
             {"role": "system", "content": (
