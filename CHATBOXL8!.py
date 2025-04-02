@@ -59,7 +59,7 @@ full_tech_list = [
     {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
-
+# Enhanced tech name and application keyword matching
 tech_lookup = {}
 for tech in full_tech_list:
     name_key = tech["name"].lower()
@@ -88,9 +88,10 @@ with st.chat_message("system"):
 user_input = st.chat_input("Ask about a technology or describe its attributes...")
 if user_input:
     matched = None
-    lowered_input = user_input.lower()
+    lowered_input = user_input.lower().strip()
+
     for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if lowered_input.strip() == tech_key.strip():
+        if lowered_input == tech_key.strip():
             matched = tech_lookup[tech_key]
             break
 
@@ -99,12 +100,6 @@ if user_input:
         name_display = matched.get("name", "This technology")
         application = matched.get("application", "N/A")
         reply = f"✅ **{name_display}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
-
-        # Render only (prevent duplicate message entry)
-        with st.chat_message("user"):
-            st.markdown(user_input)
-        with st.chat_message("assistant"):
-            st.markdown(reply)
 
     else:
         gpt_prompt = [
@@ -125,12 +120,12 @@ if user_input:
             )
             reply = response.choices[0].message.content
 
-        with st.chat_message("user"):
-            st.markdown(user_input)
-        with st.chat_message("assistant"):
-            st.markdown(reply)
+    with st.chat_message("user"):
+        st.markdown(user_input)
+    with st.chat_message("assistant"):
+        st.markdown(reply)
 
-        st.session_state["messages"] += [
-            {"role": "user", "content": user_input},
-            {"role": "assistant", "content": reply}
-        ]
+    st.session_state["messages"] += [
+        {"role": "user", "content": user_input},
+        {"role": "assistant", "content": reply}
+    ]
