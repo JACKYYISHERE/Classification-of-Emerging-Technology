@@ -59,15 +59,16 @@ full_tech_list = [
     {"name": "Space Computing", "application": "Fault-tolerant space-based processors", "age": 2, "risk": 4, "stability": 2, "market_adoption": 2, "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2, "public_acceptance": 2, "technical_scalability": 2, "commercial_adoption": 2},
 ]
 
-# Enhanced tech name and application keyword matching
+## Enhanced tech name and application keyword matching
 tech_lookup = {}
 for tech in full_tech_list:
-    name_key = tech["name"].lower()
-    app_key = tech.get("application", "").lower()
-    combined_key = f"{name_key} in {app_key}" if app_key else name_key
-
+    name_key = tech["name"].lower().strip()
+    app_key = tech.get("application", "").lower().strip()
     tech_lookup[name_key] = tech
-    tech_lookup[combined_key] = tech
+    if app_key:
+        for word in app_key.split(","):
+            for subword in word.split():
+                tech_lookup[f"{name_key} {subword.strip()}"] = tech
 
 st.set_page_config(page_title="Tech Classifier", page_icon="💬")
 st.title("🤖 Emerging Technology Classifier")
@@ -91,7 +92,7 @@ if user_input:
     lowered_input = user_input.lower().strip()
 
     for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if lowered_input == tech_key.strip():
+        if tech_key in lowered_input:
             matched = tech_lookup[tech_key]
             break
 
@@ -100,7 +101,6 @@ if user_input:
         name_display = matched.get("name", "This technology")
         application = matched.get("application", "N/A")
         reply = f"✅ **{name_display}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
-
     else:
         gpt_prompt = [
             {"role": "system", "content": (
