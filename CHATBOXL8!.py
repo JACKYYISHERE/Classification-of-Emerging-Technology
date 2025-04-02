@@ -28,7 +28,7 @@ def classify_tech(tech):
 full_tech_list = [
     {"name": "Blockchain", "application": "Private Equity", "age": 3, "risk": 5, "stability": 2, "market_adoption": 1,
      "regulatory_maturity": 2, "infrastructure_readiness": 2, "commercial_viability": 2,
-     "public_acceptance": 1, "technical_scalability": 1, "commercial_adoption": 1},
+     "public_acceptance": 1, "technical_scalability": 1, "commercial_adoption": 1}, 
 
     {"name": "Blockchain in Private Equity", "application": "Secure recordkeeping and asset tracking in private equity", "age": 4, "risk": 3, "stability": 3, "market_adoption": 4,
      "regulatory_maturity": 3, "infrastructure_readiness": 4, "commercial_viability": 4,
