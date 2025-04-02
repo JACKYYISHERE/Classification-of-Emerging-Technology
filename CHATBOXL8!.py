@@ -60,7 +60,6 @@ full_tech_list = [
 ]
 
 
-# Enhanced tech name and application keyword matching
 tech_lookup = {}
 for tech in full_tech_list:
     name_key = tech["name"].lower()
@@ -91,7 +90,7 @@ if user_input:
     matched = None
     lowered_input = user_input.lower()
     for tech_key in sorted(tech_lookup.keys(), key=len, reverse=True):
-        if lowered_input == tech_key:
+        if lowered_input.strip() == tech_key.strip():
             matched = tech_lookup[tech_key]
             break
 
@@ -101,7 +100,7 @@ if user_input:
         application = matched.get("application", "N/A")
         reply = f"✅ **{name_display}** is classified as: **{classification}**\n\n📌 Application: _{application}_"
 
-        # 只渲染，不追加到 message（防止重复）
+        # Render only (prevent duplicate message entry)
         with st.chat_message("user"):
             st.markdown(user_input)
         with st.chat_message("assistant"):
@@ -126,10 +125,12 @@ if user_input:
             )
             reply = response.choices[0].message.content
 
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        with st.chat_message("assistant"):
+            st.markdown(reply)
+
         st.session_state["messages"] += [
             {"role": "user", "content": user_input},
             {"role": "assistant", "content": reply}
         ]
-
-        with st.chat_message("assistant"):
-            st.markdown(reply)
